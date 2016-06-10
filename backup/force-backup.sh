@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # This is to force the backup to run when not running on the crontab
+# https://saltstack.com/
 
 echo "db"
 salt "db.webhostonbarter.com" cmd.run "/root/scripts/backup/db.sh"
@@ -23,4 +24,4 @@ salt "web1.webhostonbarter.com" cmd.run "/root/scripts/backup/web1.sh"
 
 echo ""
 echo "Checking backup..."
-salt "backup.webhostonbarter.com" cmd.run "/root/scripts/backup/check.sh | mail -s 'Backup Results' jonathan@purpleman.org"
+salt "backup.webhostonbarter.com" cmd.run "/root/scripts/backup/check.sh | mail -s 'Backup Results' email@domain.com"
