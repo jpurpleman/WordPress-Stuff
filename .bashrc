@@ -18,6 +18,7 @@ function git-wp-commit-object() {
     # Get the current directory
     startdir=${PWD##*/}
 
+    # Check to see if we're in a plugin or theme folder
     if [[ ! -f ../../../wp-config.php ]]; then
         echo "Can't find the wp-config.php file. Are you in a plugin or theme directory?"
         echo ""
@@ -26,20 +27,25 @@ function git-wp-commit-object() {
         echo "Exiting..."
     else
 
-        # we're in a plugin or theme folder, find out which one, plugin or theme
+        # We're in a plugin or theme folder, find out which one, plugin or theme
         cd ..
         wpcontent_folder=${PWD##*/}
         cd $startdir
 
-        # Convert plugins to plugin, themes to theme - removes the last character
+        # Convert "plugins" to plugin or "themes" to theme or in other words remove the last character
         object="${wpcontent_folder%?}"
 
         # Get details about the wordpress object we want to commit
+        # Get the title of the plugin or theme we're committing
         title=$(wp ${object} get ${startdir} --field=title)
+
+        # Get the version of the plugin or theme we're committing
         version=$(wp ${object} get ${startdir} --field=version)
 
+        # Check to see if it's in the repo already or not
         git ls-files . --error-unmatch > /dev/null 2>&1;
 
+        # Create parts of the commit message conditionally
         if [ $? == 0 ]; then
             action="Updating"
             direction="to"
@@ -48,10 +54,16 @@ function git-wp-commit-object() {
             direction="at"
         fi
 
+        # Add all files to git that have been added or modified
         git add .
+
+        # Add all files to git that have been deleted or moved
         git add . -u
 
+        # Git commit! with appropriate message
         git commit -m "$action $object: $title $direction version $version"
+
+        # Print that message
         echo "$action $object: $title $direction version $version"
 
     fi
