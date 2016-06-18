@@ -13,6 +13,8 @@ alias wordpress-update-all='wp core update && wp core update-db && wp plugin upd
 
 alias wordpress-remove-default-widgets='wp widget delete search-2 && wp widget delete recent-posts-2 && wp widget delete recent-comments-2 && wp widget delete archives-2 && wp widget delete categories-2 && wp widget delete meta-2'
 
+alias wordpress-delete-sample-page='wp post delete $( wp post list --post_type=page --posts_per_page=1 --post_status=publish --pagename="sample-page" --field=ID --format=ids )'
+
 function git-wp-commit-object() {
 
     # Get the current directory
